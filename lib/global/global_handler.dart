@@ -2,18 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-Widget uiLabel(String? text, {double fontSize = 16,
+Widget uiLabel(String? text, {
+  double fontSize = 16,
   Color? textColor,
   FontWeight fontWeight = FontWeight.normal,
   TextOverflow overflow = TextOverflow.ellipsis,
   int? maxLines,
+  TextStyle? style,
 }) {
   return Text(
     text ?? "",
     overflow: overflow,
     softWrap:true,
     maxLines: maxLines,
-    style:TextStyle(
+    style: style ?? TextStyle(
       decoration: TextDecoration.none,
       color: textColor,
       fontSize: fontSize,
@@ -46,7 +48,7 @@ class GlobalHandler {
 
   static Future<T?> showLoading <T>(BuildContext context) {
     return showDialogView(context: context, backgroundColor: const Color.fromRGBO(255, 255, 255, 0),builder: (context) {
-      return GlobalHandler.loadingView();
+      return GlobalHandler.loadingView(context);
     });
   }
 
@@ -54,7 +56,7 @@ class GlobalHandler {
     Navigator.of(context).pop();
   }
 
-  static Widget loadingView() {
+  static Widget loadingView(BuildContext context) {
     return Container(
       child: Center(
         child: ClipRRect(

@@ -22,22 +22,19 @@ class RssViewControllerState extends State<RssViewController> {
     setState(() {});
   }
 
-  Widget _rssListCell(int index) {
+  Widget _rssListCell(BuildContext context, int index) {
     var item = widget.atomFeed?.items?[index];
     return Container(
+      color: Theme.of(context).unselectedWidgetColor,
       width: kScreenWidth(),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          uiLabel(item?.title,fontSize: 16,textColor: Colors.black87),
+          uiLabel(item?.title, style: Theme.of(context).textTheme.subtitle1),
           const SizedBox(height: 8),
-          uiLabel(
-              item?.updated.toString(),
-              fontSize: 14,
-            textColor: CupertinoColors.systemGrey,
-            fontWeight: FontWeight.normal
-          ),
+          uiLabel(item?.updated.toString(),
+              style: Theme.of(context).textTheme.bodyText2),
         ],
       ),
     );
@@ -53,7 +50,7 @@ class RssViewControllerState extends State<RssViewController> {
         // shrinkWrap: true,
         itemCount: widget.atomFeed?.items?.length ?? 0,
         itemBuilder: (BuildContext context, int index) {
-          return _rssListCell(index);
+          return _rssListCell(context, index);
         },
       );
     }
@@ -61,30 +58,28 @@ class RssViewControllerState extends State<RssViewController> {
 
   @override
   Widget build(BuildContext context) {
-    return navigationViewController(_rssView(),
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: Colors.white,
-          middle: Text(widget.atomFeed?.title ?? "RSS预览"),
-          trailing: CupertinoButton(
-            padding: const EdgeInsets.all(0),
-            onPressed: () {
-              if (widget.atomFeed != null) {
-                DatabaseManager().insertFeed(widget.atomFeed!);
-                DatabaseManager().insertAtomItemFromFeed(widget.atomFeed!);
-              }
-              Future.delayed(const Duration(milliseconds: 500), (){
-                NotificationCenter.defaultCenter().postNotification(followUpdateNotification);
-              });
+    return navigationViewController(_rssView(), context,
+        title: widget.atomFeed?.title ?? "RSS预览",
+        rightBarItem: CupertinoButton(
+          padding: const EdgeInsets.all(0),
+          onPressed: () {
+            if (widget.atomFeed != null) {
+              DatabaseManager().insertFeed(widget.atomFeed!);
+              DatabaseManager().insertAtomItemFromFeed(widget.atomFeed!);
+            }
+            Future.delayed(const Duration(milliseconds: 500), () {
+              NotificationCenter.defaultCenter()
+                  .postNotification(followUpdateNotification);
+            });
 
-              Navigator.of(context).popUntil(ModalRoute.withName('/'));
-            },
-            child: const Text(
-              "添加",
-              style: TextStyle(
-                decoration: TextDecoration.none,
-                color: CupertinoColors.activeBlue,
-                fontSize: 16,
-              ),
+            Navigator.of(context).popUntil(ModalRoute.withName('/'));
+          },
+          child: Text(
+            "添加",
+            style: TextStyle(
+              decoration: TextDecoration.none,
+              color: Theme.of(context).primaryColor,
+              fontSize: 16,
             ),
           ),
         ));

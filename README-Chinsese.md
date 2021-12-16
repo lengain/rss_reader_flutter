@@ -1,5 +1,4 @@
 # rss_reader_flutter
-
 ==========
 
 ![License MIT](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)
@@ -10,9 +9,9 @@
 
 ## 功能
 
-* 添加RSS
-* 解析RSS
-* sqlite数据库存储
+ * 添加RSS
+ * 解析RSS
+ * sqlite数据库存储
 
 ## 运行
 
@@ -25,3 +24,4 @@ flutter pub get
 
 来获取依赖。
 安装依赖后运行即可。
+

@@ -12,7 +12,6 @@ class TabBarController extends StatefulWidget {
 }
 
 class TabBarControllerState extends State<TabBarController> {
-
   @override
   void initState() {
     //初始化数据库
@@ -46,24 +45,61 @@ class TabBarControllerState extends State<TabBarController> {
           },
         );
       },
-      tabBar: _tabBarView(),
+      tabBar: _tabBarView(context),
     );
   }
 
-  CupertinoTabBar _tabBarView() {
+  CupertinoTabBar _tabBarView(BuildContext context) {
     return CupertinoTabBar(
-      backgroundColor: Colors.white,
-      activeColor: Colors.amber, //选中
-      inactiveColor: Colors.amberAccent, //未选中
-      items: const [
+      backgroundColor:
+          Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      activeColor: Theme.of(context)
+          .bottomNavigationBarTheme
+          .selectedIconTheme
+          ?.color, //选中
+      inactiveColor: Theme.of(context)
+          .bottomNavigationBarTheme
+          .unselectedIconTheme!
+          .color!, //未选中
+      items: [
         BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.book),
-            label: "阅读",
-            activeIcon: Icon(CupertinoIcons.book_solid)),
+          icon: Container(
+            padding: const EdgeInsets.fromLTRB(0, 3.5, 0, 0),
+            child: Icon(CupertinoIcons.eyeglasses,
+                size: (Theme.of(context)
+                    .bottomNavigationBarTheme
+                    .unselectedIconTheme
+                    ?.size ??
+                    28) + 2),
+          ),
+          label: "阅读",
+          activeIcon: Container(
+            padding: const EdgeInsets.fromLTRB(0, 3.5, 0, 0),
+            child: Icon(
+              CupertinoIcons.eyeglasses,
+              size: (Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .selectedIconTheme
+                  ?.size ??
+                  28) + 2,
+            ),
+          ),
+        ),
         BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.rectangle_split_3x1),
-            label: "关注",
-            activeIcon: Icon(CupertinoIcons.rectangle_split_3x1_fill)),
+          icon: Icon(CupertinoIcons.list_bullet,
+              size: (Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .unselectedIconTheme
+                  ?.size ??
+                  28) - 1),
+          label: "关注",
+          activeIcon: Icon(CupertinoIcons.list_bullet,
+              size: (Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .selectedIconTheme
+                  ?.size ??
+                  28) - 1),
+        ),
         // BottomNavigationBarItem(
         //     icon: Icon(CupertinoIcons.person),
         //     label: "我的",

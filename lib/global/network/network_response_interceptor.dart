@@ -17,6 +17,7 @@ class NetworkResponseInterceptor extends InterceptorsWrapper {
       } else {
         result = response.data;
       }
+
       bool success = result[ResponseSuccess];
       if (success) {
         response.data = result[ResponseData];

@@ -31,9 +31,12 @@ class ReadListViewControllerState extends State<ReadListViewController> {
   Widget build(BuildContext context) {
     return navigationViewController(
         hasLoadData
-            ? (dataLists.isNotEmpty ? _refreshArticleListView() : _emptyView())
-            : GlobalHandler.loadingView(),
-        title: "阅读");
+            ? (dataLists.isNotEmpty ? _refreshArticleListView(context) : _emptyView())
+            : GlobalHandler.loadingView(context),
+        context,
+        title: "阅读",
+      hideBackButton: true,
+    );
   }
 
   @override
@@ -88,10 +91,10 @@ class ReadListViewControllerState extends State<ReadListViewController> {
   }
 
   void _addRssAction() {
-    GlobalHandler.pushViewController(context, addRssNavigationController());
+    GlobalHandler.pushViewController(context, addRssNavigationController(context));
   }
 
-  Widget _refreshArticleListView() {
+  Widget _refreshArticleListView(BuildContext context) {
     if (Platform.isIOS) {
       return CustomScrollView(
         slivers: [
@@ -102,15 +105,15 @@ class ReadListViewControllerState extends State<ReadListViewController> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                 if (index == dataLists.length - 1) {
-                  return _articleCell(index);
+                  return _articleCell(context,index);
                 }else {
                   return Column(
                     children: [
-                      _articleCell(index),
-                      _separatorView(),
-                ],
+                      _articleCell(context,index),
+                      _separatorView(context),
+                    ],
                   );
                 }
               },
@@ -130,7 +133,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
     }
   }
 
-  Widget _separatorView() {
+  Widget _separatorView(BuildContext context) {
     return Row(
       children: [
         SizedBox.fromSize(size: Size(20, kOnePix())),
@@ -138,7 +141,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
           height: kOnePix(),
           width: kScreenWidth() - 20,
-          color: CupertinoColors.separator,
+          color: Theme.of(context).dividerColor,
         ),
       ],
     );
@@ -147,31 +150,30 @@ class ReadListViewControllerState extends State<ReadListViewController> {
   Widget _articleListView() {
     return ListView.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return _separatorView();
+          return _separatorView(context);
         },
         itemCount: dataLists.length,
         itemBuilder: (BuildContext context, int index) {
-          return _articleCell(index);
+          return _articleCell(context,index);
         });
   }
 
-  Widget _articleCell(int index) {
+  Widget _articleCell(BuildContext context, int index) {
     var article = dataLists[index];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       child: Container(
+        color: Theme.of(context).unselectedWidgetColor,
           width: kScreenWidth(),
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               uiLabel(article.title,
-                  fontSize: 16, textColor: Colors.black87, maxLines: 3),
+                  style: Theme.of(context).textTheme.subtitle1, maxLines: 3),
               const SizedBox(height: 8),
               uiLabel(article.updateTime(),
-                  fontSize: 14,
-                  textColor: CupertinoColors.systemGrey,
-                  fontWeight: FontWeight.normal),
+                  style: Theme.of(context).textTheme.bodyText2),
             ],
           )),
       onTapUp: (TapUpDetails details) async {

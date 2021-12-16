@@ -21,16 +21,16 @@ class FollowViewController extends StatefulWidget {
 }
 
 class FollowViewControllerState extends State<FollowViewController> {
-  
   bool hasLoadData = false;
 
   @override
   void dispose() {
     //移除所有通知
-    NotificationCenter.defaultCenter().removeNotification(associatedObject: widget);
+    NotificationCenter.defaultCenter()
+        .removeNotification(associatedObject: widget);
     super.dispose();
   }
-  
+
   @override
   void initState() {
     //添加通知
@@ -48,7 +48,8 @@ class FollowViewControllerState extends State<FollowViewController> {
   }
 
   var dataLists = <AtomFeed>[];
-  void update() async{
+
+  void update() async {
     dataLists.clear();
     var list = await DatabaseManager.defaultManager().feedList();
     list?.forEach((element) {
@@ -56,9 +57,7 @@ class FollowViewControllerState extends State<FollowViewController> {
     });
     hasLoadData = true;
     var documentPath = await getApplicationDocumentsDirectory();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   Widget _atomFeedListView() {
@@ -66,7 +65,7 @@ class FollowViewControllerState extends State<FollowViewController> {
         separatorBuilder: (BuildContext context, int index) {
           return Row(
             children: [
-              SizedBox.fromSize(size: Size(20,kOnePix())),
+              SizedBox.fromSize(size: Size(20, kOnePix())),
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                 height: kOnePix(),
@@ -78,36 +77,35 @@ class FollowViewControllerState extends State<FollowViewController> {
         },
         itemCount: dataLists.length,
         itemBuilder: (BuildContext context, int index) {
-      return _rssFeedCell(index);
-      }
-    );
+          return _rssFeedCell(context, index);
+        });
   }
 
-  Widget _rssFeedCell(int index) {
+  Widget _rssFeedCell(BuildContext context, int index) {
     var atomFeed = dataLists[index];
     return Container(
+      color: Theme.of(context).unselectedWidgetColor,
       width: kScreenWidth(),
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           CachedNetworkImage(
-            placeholder:(context,url) {
+            placeholder: (context, url) {
               return const Icon(Icons.eleven_mp);
             },
-            imageUrl:atomFeed.favicon(),
+            imageUrl: atomFeed.favicon(),
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(
+            width: 10,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              uiLabel(atomFeed.title,fontSize: 16,textColor: Colors.black87),
+              uiLabel(atomFeed.title,
+                  style: Theme.of(context).textTheme.subtitle1),
               const SizedBox(height: 8),
-              uiLabel(
-                  atomFeed.updated.toString(),
-                  fontSize: 14,
-                  textColor: CupertinoColors.systemGrey,
-                  fontWeight: FontWeight.normal
-              ),
+              uiLabel(atomFeed.updated.toString(),
+                  style: Theme.of(context).textTheme.bodyText2),
             ],
           )
         ],
@@ -115,24 +113,29 @@ class FollowViewControllerState extends State<FollowViewController> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return navigationViewController(
-        hasLoadData ? (dataLists.isNotEmpty ? _atomFeedListView() : _emptyView()) : GlobalHandler.loadingView(),
+        hasLoadData
+            ? (dataLists.isNotEmpty ? _atomFeedListView() : _emptyView())
+            : GlobalHandler.loadingView(context),
+        context,
+        hideBackButton: true,
         navigationBar: CupertinoNavigationBar(
-          backgroundColor: Colors.white,
-          middle: const Text("关注"),
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          middle:
+              Text("关注", style: Theme.of(context).appBarTheme.titleTextStyle),
+          brightness: Theme.of(context).brightness,
           trailing: CupertinoButton(
-            onPressed:_addRssAction,
-            child: const Icon(CupertinoIcons.add),
+            onPressed: _addRssAction,
+            child: Icon(CupertinoIcons.add,color: Theme.of(context).primaryColor),
           ),
         ));
   }
 
   void _addRssAction() {
     GlobalHandler.pushViewController(
-        context, addRssNavigationController());
+        context, addRssNavigationController(context));
   }
 
   Widget _emptyView() {
@@ -141,14 +144,14 @@ class FollowViewControllerState extends State<FollowViewController> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          uiLabel("空空如也",textColor: CupertinoColors.systemGrey),
+          uiLabel("空空如也", textColor: CupertinoColors.systemGrey),
           SizedBox(
             width: 200,
             height: 40,
             child: CupertinoButton(
               padding: const EdgeInsets.all(0),
               onPressed: _addRssAction,
-              child: uiLabel("去添加RSS",textColor: CupertinoColors.activeBlue),
+              child: uiLabel("去添加RSS", textColor: Theme.of(context).primaryColor),
             ),
           )
         ],

@@ -46,6 +46,7 @@ class ReadWebViewControllerState extends State<ReadWebViewController> {
   Widget build(BuildContext context) {
     return navigationViewController(
       _webView(),
+      context,
       title: widget.articleItem.title,
       rightBarItem: CupertinoButton(
         padding: EdgeInsets.zero,
