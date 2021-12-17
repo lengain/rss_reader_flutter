@@ -9,10 +9,6 @@ import 'package:rss_reader_flutter/global/network/network.dart';
 import 'package:webfeed/domain/atom_feed.dart';
 import '../navigation_controller.dart';
 
-CupertinoPageScaffold addRssNavigationController(BuildContext context) {
-  return navigationViewController(const AddRssViewController(), context,title:"添加RSS");
-}
-
 class AddRssViewController extends StatefulWidget {
   const AddRssViewController({Key? key}) : super(key: key);
   @override
@@ -52,7 +48,7 @@ class AddRssViewControllerState extends State <AddRssViewController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return navigationViewController(Container(
       color: Theme.of(context).unselectedWidgetColor,
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -95,6 +91,6 @@ class AddRssViewControllerState extends State <AddRssViewController> {
           uiLabel("github.com等网址可能需要多次重试\n外网无法访问或翻墙后访问",textColor: CupertinoColors.systemGrey,fontSize: 12),
         ],
       ),
-    );
+    ), context,title: "添加RSS");
   }
 }

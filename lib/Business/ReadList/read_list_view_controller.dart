@@ -31,7 +31,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
   Widget build(BuildContext context) {
     return navigationViewController(
         hasLoadData
-            ? (dataLists.isNotEmpty ? _refreshArticleListView(context) : _emptyView())
+            ? (dataLists.isNotEmpty ? _refreshArticleListView(context) : _emptyView(context))
             : GlobalHandler.loadingView(context),
         context,
         title: "阅读",
@@ -91,7 +91,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
   }
 
   void _addRssAction() {
-    GlobalHandler.pushViewController(context, addRssNavigationController(context));
+    GlobalHandler.pushViewController(context, const AddRssViewController());
   }
 
   Widget _refreshArticleListView(BuildContext context) {
@@ -194,7 +194,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
     );
   }
 
-  Widget _emptyView() {
+  Widget _emptyView(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -207,7 +207,7 @@ class ReadListViewControllerState extends State<ReadListViewController> {
             child: CupertinoButton(
               padding: const EdgeInsets.all(0),
               onPressed: _addRssAction,
-              child: uiLabel("去添加RSS", textColor: CupertinoColors.activeBlue),
+              child: uiLabel("去添加RSS", textColor: Theme.of(context).primaryColor),
             ),
           )
         ],

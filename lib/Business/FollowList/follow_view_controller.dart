@@ -135,7 +135,7 @@ class FollowViewControllerState extends State<FollowViewController> {
 
   void _addRssAction() {
     GlobalHandler.pushViewController(
-        context, addRssNavigationController(context));
+        context, const AddRssViewController());
   }
 
   Widget _emptyView() {

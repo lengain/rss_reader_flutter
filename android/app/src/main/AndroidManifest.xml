@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.rss_reader_flutter">
    <application
-        android:label="rss_reader_flutter"
+        android:label="RSS阅读器"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
